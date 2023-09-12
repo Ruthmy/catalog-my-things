@@ -155,7 +155,7 @@ class CatalogApp
     system = gets.chomp
     puts 'Enter the label:'
     label = gets.chomp
-    game = Game.new(title, system, label) 
+    game = Game.new(title, system, label)
     @data['games'] << game
     save_data
     puts 'Game added successfully!'
