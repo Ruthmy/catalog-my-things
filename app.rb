@@ -1,11 +1,23 @@
+require 'json'
+require_relative 'author'
+require_relative 'game'
+
 class App
   def initialize
+    create_data
     @books = []
     @albums = []
     @games = []
     @authors = []
     @labels = []
     @genres = []
+  end
+
+  # Creates a data directory if not exists
+  def create_data
+    return if Dir.exist?('./data')
+
+    Dir.mkdir('./data')
   end
 
   def option_select
