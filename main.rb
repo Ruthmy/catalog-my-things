@@ -1,227 +1,121 @@
-require 'json'
+# main.rb
 
-class Book
-  attr_accessor :title, :author
+require_relative 'item'
+require_relative 'book'
+require_relative 'label'
+require_relative 'music_album'
+require_relative 'genre'
+require_relative 'game'
+require_relative 'author'
 
-  def initialize(title, author)
-    @title = title
-    @author = author
+class Application
+  def initialize
+    @books = []
+    @music_albums = []
+    @games = []
   end
 
-  def to_json(*_args)
-    {
-      title: @title,
-      author: @author
-    }.to_json
-  end
+  def run
+    loop do
+      display_menu
+      choice = gets.chomp.to_i
+      break if choice.zero?
 
-  def self.from_json(json)
-    Book.new(json['title'], json['author'])
-  end
-end
-
-class MusicAlbum
-  attr_accessor :title, :artist, :genre
-
-  # Adicionado =nil'
-  def initialize(title, artist, genre = nil)
-    @title = title
-    @artist = artist
-    @genre = genre
-  end
-
-  def to_json(*_args)
-    {
-      title: @title,
-      artist: @artist,
-      genre: @genre
-    }.to_json
-  end
-
-  def self.from_json(json)
-    MusicAlbum.new(json['title'], json['artist'], json['genre'])
-  end
-end
-
-class Game
-  attr_accessor :title, :system, :label
-
-  # Passo 2
-  def initialize(title, system, label = nil)
-    @title = title
-    @system = system
-    @label = label
-  end
-
-  def to_json(*_args)
-    {
-      title: @title,
-      system: @system,
-      label: @label
-    }.to_json
-  end
-
-  def self.from_json(json)
-    Game.new(json['title'], json['system'], json['label'])
-  end
-end
-
-class CatalogApp
-  def initialize(filename = 'catalog_data.json')
-    @filename = filename
-    @data = load_or_initialize_data
-  end
-
-  def load_or_initialize_data
-    return { 'books' => [], 'music_albums' => [], 'games' => [] } unless File.exist?(@filename)
-
-    raw_data = JSON.parse(File.read(@filename))
-    {
-      'books' => raw_data['books'].map { |book_data| Book.from_json(book_data) },
-      'music_albums' => raw_data['music_albums'].map { |album_data| MusicAlbum.from_json(album_data) },
-      'games' => raw_data['games'].map { |game_data| Game.from_json(game_data) }
-    }
-  end
-
-  def save_data
-    File.write(@filename, @data.to_json)
+      handle_choice(choice)
+    end
   end
 
   def display_menu
     puts 'Choose an option:'
     puts '1. Add Book'
-    puts '2. Add Music Album'
-    puts '3. Add Game'
-    puts '4. List All Books'
-    puts '5. List All Music Albums'
+    puts '2. List All Books'
+    puts '3. Add Music Album'
+    puts '4. List All Music Albums'
+    puts '5. Add Game'
     puts '6. List All Games'
     puts '7. List All Labels'
     puts '8. List All Genres'
     puts '9. List All Authors'
     puts '0. Exit'
-    gets.chomp.to_i
   end
 
-  def execute_option(option)
+  def handle_choice(choice)
     actions = {
-      1 => -> { add_book },
-      2 => -> { add_music_album },
-      3 => -> { add_game },
-      4 => -> { list_all_books },
-      5 => -> { list_all_music_albums },
-      6 => -> { list_all_games },
-      7 => -> { list_all_labels },
-      8 => -> { list_all_genres },
-      9 => -> { list_all_authors },
-      0 => -> { exit_app }
+      1 => :add_book,
+      2 => :list_all_books,
+      3 => :add_music_album,
+      4 => :list_all_music_albums,
+      5 => :add_game,
+      6 => :list_all_games,
+      7 => :list_all_labels,
+      8 => :list_all_genres,
+      9 => :list_all_authors
     }
 
-    action = actions[option]
-    action&.call || display_invalid_option
-  end
-
-  def display_invalid_option
-    puts 'Invalid option. Please try again.'
+    if actions.include?(choice)
+      send(actions[choice])
+    else
+      display_invalid_choice
+    end
   end
 
   def add_book
-    puts 'Enter the title of the book:'
+    puts 'Enter book title:'
     title = gets.chomp
-    puts 'Enter the author of the book:'
-    author = gets.chomp
-    book = Book.new(title, author)
-    @data['books'] << book
-    save_data
+    puts 'Enter book publisher:'
+    publisher = gets.chomp
+    puts 'Enter book cover state (good/bad):'
+    cover_state = gets.chomp
+
+    book = Book.new(title: title, publisher: publisher, cover_state: cover_state)
+    @books << book
     puts 'Book added successfully!'
   end
 
-  def add_music_album
-    puts 'Enter the title of the album:'
-    title = gets.chomp
-    puts 'Enter the artist:'
-    artist = gets.chomp
-    puts 'Enter the genre:'
-    genre = gets.chomp
-    album = MusicAlbum.new(title, artist, genre)
-    @data['music_albums'] << album
-    save_data
-    puts 'Music album added successfully!'
-  end
-
-  def add_game
-    puts 'Enter the title of the game:'
-    title = gets.chomp
-    puts 'Enter the system:'
-    system = gets.chomp
-    puts 'Enter the label:'
-    label = gets.chomp
-    game = Game.new(title, system, label)
-    @data['games'] << game
-    save_data
-    puts 'Game added successfully!'
-  end
-
   def list_all_books
-    @data['books'].each_with_index do |book, index|
-      puts "#{index + 1}. Title: #{book.title}, Author: #{book.author}"
+    puts 'Listing all books:'
+    @books.each_with_index do |book, index|
+      puts "#{index + 1}. Title: #{book.title}, Publisher: #{book.publisher}, Cover State: #{book.cover_state}"
     end
+  end
+
+  def add_music_album
+    # implement a similar pattern as the add_book method.
   end
 
   def list_all_music_albums
-    @data['music_albums'].each_with_index do |album, index|
-      puts "#{index + 1}. Title: #{album.title}, Artist: #{album.artist}"
-    end
+    # implement a similar pattern as the list_all_books method.
+  end
+
+  def add_game
+    # implement a similar pattern as the add_book method.
   end
 
   def list_all_games
-    @data['games'].each_with_index do |game, index|
-      puts "#{index + 1}. Title: #{game.title}, System: #{game.system}"
-    end
+    # implement a similar pattern as the list_all_books method.
   end
 
   def list_all_labels
-    labels = @data['games'].map(&:label).compact.uniq
-    if labels.empty?
-      puts 'No labels found.'
-    else
-      puts 'List of all game labels:'
-      labels.each { |label| puts label }
+    puts 'Listing all labels:'
+    @labels.each_with_index do |label, index|
+      puts "#{index + 1}. #{label.name}"
     end
   end
 
   def list_all_genres
-    genres = @data['music_albums'].map(&:genre).compact.uniq
-    if genres.empty?
-      puts 'No genres found.'
-    else
-      puts 'List of all music album genres:'
-      genres.each { |genre| puts genre }
+    puts 'Listing all genres:'
+    @genres.each_with_index do |genre, index|
+      puts "#{index + 1}. #{genre.name}"
     end
   end
 
   def list_all_authors
-    authors = @data['books'].map(&:author).uniq
-    if authors.empty?
-      puts 'No authors found.'
-    else
-      puts 'List of all authors:'
-      authors.each { |author| puts author }
-    end
-  end
-
-  def exit_app
-    puts 'Thank you for using the catalog app! Goodbye.'
-    exit
-  end
-
-  def run
-    loop do
-      option = display_menu
-      execute_option(option)
+    puts 'Listing all authors:'
+    @authors.each_with_index do |author, index|
+      puts "#{index + 1}. #{author.name}"
     end
   end
 end
 
-# Start the app
-app = CatalogApp.new
+app = Application.new
 app.run
