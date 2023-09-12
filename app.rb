@@ -127,6 +127,8 @@ class App
     first_name = names[0]
     last_name = names[1] if names.length > 1
     author_obj = Author.new(first_name, last_name)
+    add_author(author_obj)
+
     game = Game.new(genre, author_obj, source, label, publish_date, multiplayer, last_played_at)
 
     game_input = {
@@ -143,6 +145,17 @@ class App
 
     @games << game_input
     File.write('./data/games.json', JSON.pretty_generate(@games))
+  end
+
+  def add_author(author)
+    author_input = {
+      'id' => author.id,
+      'first_name' => author.first_name,
+      'last_name' => author.last_name
+    }
+
+    @authors << author_input
+    File.write('./data/authors.json', JSON.pretty_generate(@authors))
   end
 
   def exit_app
