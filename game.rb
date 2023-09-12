@@ -10,7 +10,7 @@ class Game < Item
   end
 
   def can_be_archived?
-    return true if item.can_be_archived? && Time.now.year - @last_played_at.year > 2
+    return true if item.can_be_archived? && Time.now.year - @last_played_at > 2
 
     false
   end
