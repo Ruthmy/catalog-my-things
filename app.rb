@@ -61,6 +61,25 @@ class App
     respond_to_option(selected_opt, options)
   end
 
+  # Options to entry a new game
+  def enter_new_game
+    print 'Genre: '
+    genre = gets.chomp
+    print 'Author: '
+    author = gets.chomp
+    print 'Source: '
+    source = gets.chomp
+    print 'Label: '
+    label = gets.chomp
+    print 'Publish date: '
+    publish_date = gets.chomp
+    print 'Multiplayer: '
+    multiplayer = gets.chomp
+    print 'Last played at: '
+    last_played_at = gets.chomp
+    add_game(genre, author, source, label, publish_date, multiplayer, last_played_at)
+  end
+
   private
 
   def respond_to_option(selected_opt, options)
@@ -103,8 +122,27 @@ class App
     puts 'this will add a music album'
   end
 
-  def add_game
-    puts 'this will add a game'
+  def add_game(genre, author, source, label, publish_date, multiplayer, last_played_at)
+    names = author.split  # Split the name at the spaces.
+    first_name = names[0]
+    last_name = names[1] if names.length > 1
+    author_obj = Author.new(first_name, last_name)
+    game = Game.new(genre, author_obj, source, label, publish_date, multiplayer, last_played_at)
+
+    game_input = {
+      'id' => game.id,
+      'author' => author,
+      'genre' => game.genre,
+      'source' => game.source,
+      'label' => game.label,
+      'publish_date' => game.publish_date,
+      'multiplayer' => game.multiplayer,
+      'last_played_at' => game.last_played_at
+      'archived' => game.can_be_archived?
+    }
+
+    @games << game_input
+    File.write('./data/games.json', JSON.pretty_generate(@games))
   end
 
   def exit_app
