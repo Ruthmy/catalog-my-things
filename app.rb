@@ -1,3 +1,5 @@
+require_relative 'book'
+
 class App
   def initialize
     @books = []
@@ -6,6 +8,7 @@ class App
     @authors = []
     @labels = []
     @genres = []
+    @book_id_counter = 1
   end
 
   def option_select
@@ -36,7 +39,11 @@ class App
   end
 
   def list_books
-    puts 'this will list the books'
+    if @books.empty?
+      puts 'No books available.'
+    else
+      @books.each { |book| puts book }
+    end
   end
 
   def list_music_albums
@@ -51,16 +58,44 @@ class App
     puts 'this will list the genres'
   end
 
-  def list_labels
-    puts 'this will list the labels'
-  end
-
   def list_authors
     puts 'this will list the authors'
   end
 
+  def list_labels
+    if @labels.empty?
+      puts 'No labels available.'
+    else
+      @labels.each { |label| puts "#{label.title} (#{label.color})" }
+    end
+  end
+
   def add_book
-    puts 'this will add a book'
+    publisher = prompt_user('Enter publisher:')
+    cover_state = prompt_user('Enter cover state:')
+    genre = prompt_user('Enter genre:')
+    author = prompt_user('Enter author:')
+    source = prompt_user('Enter source:')
+    label = prompt_user('Enter label:')
+    publish_date = prompt_user('Enter publish date (Year):').to_i
+
+    book = Book.new(
+      publisher: publisher,
+      cover_state: cover_state,
+      genre: genre,
+      author: author,
+      source: source,
+      label: label,
+      publish_date: publish_date
+    )
+    @books << book
+
+    puts 'Book added successfully!'
+  end
+
+  def prompt_user(message)
+    puts message
+    gets.chomp
   end
 
   def add_music_album

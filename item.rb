@@ -8,7 +8,6 @@ class Item
     @source = source
     @label = label
     @publish_date = publish_date
-    private
     @id = self.class.id_counter
     @archived = false
   end
