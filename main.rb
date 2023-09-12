@@ -21,7 +21,7 @@ class Book
 end
 
 class MusicAlbum
-  attr_accessor :title, :artist, :genre # Adicionado :genre
+  attr_accessor :title, :artist, :genre
 
   # Adicionado =nil'
   def initialize(title, artist, genre = nil)
@@ -44,7 +44,7 @@ class MusicAlbum
 end
 
 class Game
-  attr_accessor :title, :system, :label # Passo 1
+  attr_accessor :title, :system, :label
 
   # Passo 2
   def initialize(title, system, label = nil)
@@ -57,12 +57,12 @@ class Game
     {
       title: @title,
       system: @system,
-      label: @label # Passo 2
+      label: @label
     }.to_json
   end
 
   def self.from_json(json)
-    Game.new(json['title'], json['system'], json['label']) # Passo 4
+    Game.new(json['title'], json['system'], json['label'])
   end
 end
 
@@ -140,9 +140,9 @@ class CatalogApp
     title = gets.chomp
     puts 'Enter the artist:'
     artist = gets.chomp
-    puts 'Enter the genre:' # Adicionado esta linha
-    genre = gets.chomp # Adicionado esta linha
-    album = MusicAlbum.new(title, artist, genre) # Adicionado o parâmetro genre
+    puts 'Enter the genre:'
+    genre = gets.chomp
+    album = MusicAlbum.new(title, artist, genre)
     @data['music_albums'] << album
     save_data
     puts 'Music album added successfully!'
@@ -153,9 +153,9 @@ class CatalogApp
     title = gets.chomp
     puts 'Enter the system:'
     system = gets.chomp
-    puts 'Enter the label:' # Passo 3
+    puts 'Enter the label:'
     label = gets.chomp
-    game = Game.new(title, system, label) # Passo 3
+    game = Game.new(title, system, label) 
     @data['games'] << game
     save_data
     puts 'Game added successfully!'
@@ -180,7 +180,7 @@ class CatalogApp
   end
 
   def list_all_labels
-    labels = @data['games'].map(&:label).compact.uniq # Modificação aqui
+    labels = @data['games'].map(&:label).compact.uniq
     if labels.empty?
       puts 'No labels found.'
     else
@@ -190,7 +190,7 @@ class CatalogApp
   end
 
   def list_all_genres
-    genres = @data['music_albums'].map(&:genre).compact.uniq # Corrigido aqui
+    genres = @data['music_albums'].map(&:genre).compact.uniq
     if genres.empty?
       puts 'No genres found.'
     else
