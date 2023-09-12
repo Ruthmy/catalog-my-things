@@ -99,7 +99,11 @@ class App
   end
 
   def list_games
-    puts 'this will list the games'
+    puts 'Games: '
+    @games.each do |game|
+      puts "Title: #{game['label']}, Author: #{game['author']}, Genre: #{game['genre']}, "
+      print "Archived: #{game['archived']}"
+    end
   end
 
   def list_genres
