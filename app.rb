@@ -115,7 +115,10 @@ class App
   end
 
   def list_authors
-    puts 'this will list the authors'
+    puts 'Authors: '
+    @authors.each do |author|
+      puts "Name: #{author['first_name']} #{author['last_name']}, ID: #{author['id']}"
+    end
   end
 
   def add_book
