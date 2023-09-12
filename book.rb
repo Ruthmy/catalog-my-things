@@ -10,6 +10,6 @@ class Book < Item
 
   def can_be_archived?
     super
-    return false if cover_state.downcase == 'bad'
+    false if cover_state.downcase == 'bad'
   end
 end
