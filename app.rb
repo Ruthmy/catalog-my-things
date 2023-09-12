@@ -11,6 +11,7 @@ class App
     @genres = []
     create_file_if_not_exists('./data/games.json')
     create_file_if_not_exists('./data/authors.json')
+    load_data_from_files
   end
 
   # Creates a data directory if not exists
@@ -22,8 +23,8 @@ class App
 
   # Sets the arrays to be empty or to be the parsed info from the files
   def load_data_from_files
-    @games = load_data_from_files('./data/games.json', [])
-    @authors = load_data_from_files('./data/authors.json', [])
+    @games = load_json_file('./data/games.json', [])
+    @authors = load_json_file('./data/authors.json', [])
   end
 
   # A method to check if the files are empty or not, and parse the info
@@ -55,7 +56,7 @@ class App
       '6' => :list_authors,
       '7' => :add_book,
       '8' => :add_music_album,
-      '9' => :add_game
+      '9' => :enter_new_game
     }
 
     respond_to_option(selected_opt, options)
@@ -81,7 +82,6 @@ class App
   end
 
   private
-
   def respond_to_option(selected_opt, options)
     if options.key?(selected_opt)
       send(options[selected_opt])
@@ -103,6 +103,7 @@ class App
     @games.each do |game|
       puts "Title: #{game['label']}, Author: #{game['author']}, Genre: #{game['genre']}, "
       print "Archived: #{game['archived']}"
+      puts "\n"
     end
   end
 
@@ -146,7 +147,7 @@ class App
       'label' => game.label,
       'publish_date' => game.publish_date,
       'multiplayer' => game.multiplayer,
-      'last_played_at' => game.last_played_at
+      'last_played_at' => game.last_played_at,
       'archived' => game.can_be_archived?
     }
 
