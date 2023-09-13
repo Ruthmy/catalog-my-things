@@ -76,7 +76,14 @@ class App
     multiplayer = gets.chomp
     print 'Last played at (year): '
     last_played_at = gets.chomp
-    add_game(genre, author, label, publish_date, multiplayer, last_played_at)
+    add_game({
+               genre: genre,
+               author: author,
+               label: label,
+               publish_date: publish_date,
+               multiplayer: multiplayer,
+               last_played_at: last_played_at
+             })
   end
 
   private
@@ -129,18 +136,18 @@ class App
     puts 'this will add a music album'
   end
 
-  def add_game(genre, author, label, publish_date, multiplayer, last_played_at)
-    names = author.split # Split the name at the spaces.
+  def add_game(options)
+    names = options[:author].split # Split the name at the spaces.
     first_name = names[0]
     last_name = names[1] if names.length > 1
     author_obj = Author.new(first_name, last_name)
     add_author(author_obj)
 
-    game = Game.new(genre, author_obj, label, publish_date, multiplayer, last_played_at)
+    game = create_game(options)
 
     game_input = {
       'id' => game.id,
-      'author' => author,
+      'author' => options[:author],
       'genre' => game.genre,
       'label' => game.label,
       'publish_date' => game.publish_date,
@@ -168,4 +175,15 @@ class App
     puts 'Thanks for using the app'
     exit
   end
+end
+
+def create_game(options)
+  Game.new({
+             genre: options[:genre],
+             author: options[:author],
+             label: options[:label],
+             publish_date: options[:publish_date],
+             multiplayer: options[:multiplayer],
+             last_played_at: options[:last_played_at]
+           })
 end
