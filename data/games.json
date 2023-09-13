@@ -1,0 +1,57 @@
+[
+  {
+    "id": 368,
+    "author": "Hoyoverse",
+    "genre": "Adventure",
+    "source": "Hoyoverse",
+    "label": "Genshin Impact",
+    "publish_date": "2020",
+    "multiplayer": "yes",
+    "last_played_at": "2023",
+    "archived": false
+  },
+  {
+    "id": 321,
+    "author": "",
+    "genre": "",
+    "source": "",
+    "label": "",
+    "publish_date": "",
+    "multiplayer": "",
+    "last_played_at": "",
+    "archived": true
+  },
+  {
+    "id": 434,
+    "author": "",
+    "genre": "",
+    "source": "",
+    "label": "",
+    "publish_date": "",
+    "multiplayer": "",
+    "last_played_at": "",
+    "archived": true
+  },
+  {
+    "id": 230,
+    "author": "",
+    "genre": "",
+    "source": "",
+    "label": "",
+    "publish_date": "",
+    "multiplayer": "",
+    "last_played_at": "",
+    "archived": true
+  },
+  {
+    "id": 755,
+    "author": "Riot Games",
+    "genre": "Action",
+    "source": "Riot Games",
+    "label": "League of Legends",
+    "publish_date": "2009",
+    "multiplayer": "yes",
+    "last_played_at": "2022",
+    "archived": false
+  }
+]
