@@ -1,4 +1,5 @@
 require_relative 'book'
+require_relative 'label'
 
 class App
   def initialize
@@ -76,21 +77,50 @@ class App
     genre = prompt_user('Enter genre:')
     author = prompt_user('Enter author:')
     source = prompt_user('Enter source:')
-    label = prompt_user('Enter label:')
-    publish_date = prompt_user('Enter publish date (Year):').to_i
-
+    
+    # Prompt the user to select a label
+    label_title = prompt_user('Enter label:')
+    label = find_or_create_label(label_title) # Find an existing label or create a new one
+  
+    # Validate the publish date input
+    publish_date = prompt_publish_date
+  
     book = Book.new(
-      publisher: publisher,
-      cover_state: cover_state,
-      genre: genre,
-      author: author,
-      source: source,
-      label: label,
-      publish_date: publish_date
+      publisher,
+      cover_state,
+      genre,
+      author,
+      source,
+      label, # Pass the label object to the book constructor
+      publish_date
     )
     @books << book
-
+  
     puts 'Book added successfully!'
+  end
+
+  # Find an existing label or create a new one
+  def find_or_create_label(title)
+    label = @labels.find { |l| l.title == title }
+    if label.nil?
+      # Create a new label if it doesn't exist
+      label = Label.new(@labels.length + 1, title, 'default_color')
+      @labels << label
+    end
+    label
+  end
+  
+  # Prompt the user for the publish date until they provide a valid year
+  def prompt_publish_date
+    loop do
+      input = prompt_user('Enter publish date (Year):')
+      begin
+        year = Integer(input)
+        return year if year >= 0 # Ensure it's a non-negative year
+      rescue ArgumentError
+        puts 'Invalid year. Please enter a valid numeric year.'
+      end
+    end
   end
 
   def prompt_user(message)

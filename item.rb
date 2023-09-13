@@ -1,28 +1,43 @@
 class Item
-  attr_accessor :genre, :author, :source, :label, :publish_date
+  attr_accessor :genre, :author, :source, :label, :publish_date, :archived
 
-  def initialize(genre, author, source, label, publish_date)
-    self.class.id_counter = (self.class.id_counter || 0) + 1
+  def initialize(genre, author, source, label, publish_date, archived = false)
     @genre = genre
     @author = author
     @source = source
     @label = label
     @publish_date = publish_date
-    @id = self.class.id_counter
-    @archived = false
+    @archived = archived
   end
 
   def move_to_archive
     @archived = true if can_be_archived?
   end
 
-  private
+  def to_json
+    {
+      'genre' => @genre.to_json,
+      'author' => @author.to_json,
+      'source' => @source,
+      'label' => @label.to_json,
+      'publish_date' => @publish_date,
+      'archived' => @archived
+    }.to_json
+  end
 
-  attr_reader :id, :archived
+  def self.from_json(json)
+    data = JSON.parse(json)
+    genre = Genre.from_json(data['genre'])
+    author = Author.from_json(data['author'])
+    label = Label.from_json(data['label'])
 
-  def can_be_archived?
-    return true if Time.now.year - @publish_date.year > 10
-
-    false
+    new(
+      genre,
+      author,
+      data['source'],
+      label,
+      data['publish_date'],
+      data['archived']
+    )
   end
 end
