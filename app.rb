@@ -1,15 +1,40 @@
+require 'json'
+require_relative 'file_manager'
+require_relative 'author'
+require_relative 'game'
 require_relative 'book'
-require_relative 'label'
+require_relative 'addgathersave'
 
 class App
+  include FileManager
+  include AddGather
   def initialize
+    create_data
+    initialize_collections
+    ensure_files_exist
+    load_data_from_files
+  end
+
+  def initialize_collections
     @books = []
     @albums = []
-    @games = []
-    @authors = []
     @labels = []
     @genres = []
-    @book_id_counter = 1
+  end
+
+  def ensure_files_exist
+    create_file_if_not_exists('./data/games.json')
+    create_file_if_not_exists('./data/authors.json')
+    create_file_if_not_exists('./data/books.json')
+    create_file_if_not_exists('./data/labels.json')
+  end
+
+  # Sets the arrays to be empty or to be the parsed info from the files
+  def load_data_from_files
+    @games = load_json_file('./data/games.json', [])
+    @authors = load_json_file('./data/authors.json', [])
+    @books = load_json_file('./data/books.json', [])
+    @labels = load_json_file('./data/labels.json', [])
   end
 
   def option_select
@@ -23,121 +48,177 @@ class App
       '6' => :list_authors,
       '7' => :add_book,
       '8' => :add_music_album,
-      '9' => :add_game
+      '9' => :enter_new_game
     }
 
     respond_to_option(selected_opt, options)
   end
 
+  # Options to entry a new game
+  def enter_new_game
+    print 'Genre: '
+    genre = gets.chomp
+    print 'Author: '
+    author = gets.chomp
+    print 'Label: '
+    label = gets.chomp
+    print 'Publish date (year): '
+    publish_date = gets.chomp
+    print 'Multiplayer: '
+    multiplayer = gets.chomp
+    print 'Last played at (year): '
+    last_played_at = gets.chomp
+    add_game({
+               genre: genre,
+               author: author,
+               label: label,
+               publish_date: publish_date,
+               multiplayer: multiplayer,
+               last_played_at: last_played_at
+             })
+  end
+end
+
   private
 
-  def respond_to_option(selected_opt, options)
-    if options.key?(selected_opt)
-      send(options[selected_opt])
-    else
-      exit_app
-    end
+def respond_to_option(selected_opt, options)
+  if options.key?(selected_opt)
+    send(options[selected_opt])
+  else
+    exit_app
+  end
+end
+
+def list_books
+  if @books.empty?
+    puts 'No books found.'
+    return
   end
 
-  def list_books
-    if @books.empty?
-      puts 'No books available.'
-    else
-      @books.each { |book| puts book }
-    end
+  puts 'Listing all books:'
+  @books.each_with_index do |book, index|
+    puts "#{index + 1}. Title: #{book['label']}, Author: #{book['author']},
+       Genre: #{book['genre']},
+       Publish Date: #{book['publish_date']},
+      Cover State: #{book['cover_state']}, Publisher: #{book['publisher']}"
   end
+end
 
-  def list_music_albums
-    puts 'this will list the music albums'
-  end
+def list_music_albums
+  puts 'this will list the music albums'
+end
 
-  def list_games
-    puts 'this will list the games'
+def list_games
+  puts 'Games: '
+  @games.each do |game|
+    puts "Title: #{game['label']}, Author: #{game['author']}, Genre: #{game['genre']}, "
+    print "Archived: #{game['archived']}"
+    puts "\n"
   end
+end
 
-  def list_genres
-    puts 'this will list the genres'
-  end
+def list_genres
+  puts 'this will list the genres'
+end
 
-  def list_authors
-    puts 'this will list the authors'
+def list_labels
+  puts 'Labels: '
+  @labels.each do |label|
+    puts "ID: #{label['id']}, Name: #{label['name']}"
   end
+end
 
-  def list_labels
-    if @labels.empty?
-      puts 'No labels available.'
-    else
-      @labels.each { |label| puts "#{label.title} (#{label.color})" }
-    end
+def list_authors
+  puts 'Authors: '
+  @authors.each do |author|
+    puts "Name: #{author['first_name']} #{author['last_name']}, ID: #{author['id']}"
   end
+end
 
-  def add_book
-    publisher = prompt_user('Enter publisher:')
-    cover_state = prompt_user('Enter cover state:')
-    genre = prompt_user('Enter genre:')
-    author = prompt_user('Enter author:')
-    source = prompt_user('Enter source:')
-    
-    # Prompt the user to select a label
-    label_title = prompt_user('Enter label:')
-    label = find_or_create_label(label_title) # Find an existing label or create a new one
-  
-    # Validate the publish date input
-    publish_date = prompt_publish_date
-  
-    book = Book.new(
-      publisher,
-      cover_state,
-      genre,
-      author,
-      source,
-      label, # Pass the label object to the book constructor
-      publish_date
-    )
-    @books << book
-  
-    puts 'Book added successfully!'
-  end
+def add_label_if_not_exists(label_name)
+  return if @labels.any? { |label| label['name'] == label_name } # Check if label already exists
 
-  # Find an existing label or create a new one
-  def find_or_create_label(title)
-    label = @labels.find { |l| l.title == title }
-    if label.nil?
-      # Create a new label if it doesn't exist
-      label = Label.new(@labels.length + 1, title, 'default_color')
-      @labels << label
-    end
-    label
-  end
-  
-  # Prompt the user for the publish date until they provide a valid year
-  def prompt_publish_date
-    loop do
-      input = prompt_user('Enter publish date (Year):')
-      begin
-        year = Integer(input)
-        return year if year >= 0 # Ensure it's a non-negative year
-      rescue ArgumentError
-        puts 'Invalid year. Please enter a valid numeric year.'
-      end
-    end
-  end
+  label_input = {
+    'id' => Random.rand(1..1000),
+    'name' => label_name
+  }
 
-  def prompt_user(message)
-    puts message
-    gets.chomp
-  end
+  @labels << label_input
+  File.write('./data/labels.json', JSON.pretty_generate(@labels))
+end
 
-  def add_music_album
-    puts 'this will add a music album'
-  end
+def create_book(options)
+  Book.new(options)
+end
 
-  def add_game
-    puts 'this will add a game'
-  end
+def add_music_album
+  puts 'this will add a music album'
+end
 
-  def exit_app
-    puts 'Thanks for using the app'
-    exit
-  end
+def add_game(options)
+  names = options[:author].split # Split the name at the spaces.
+  first_name = names[0]
+  last_name = names[1] if names.length > 1
+  author_obj = Author.new(first_name, last_name)
+  add_author(author_obj)
+
+  game = create_game(options)
+
+  game_input = {
+    'id' => game.id,
+    'author' => options[:author],
+    'genre' => game.genre,
+    'label' => game.label,
+    'publish_date' => game.publish_date,
+    'multiplayer' => game.multiplayer,
+    'last_played_at' => game.last_played_at,
+    'archived' => game.can_be_archived?
+  }
+
+  @games << game_input
+  File.write('./data/games.json', JSON.pretty_generate(@games))
+end
+
+def add_author(author)
+  author_input = {
+    'id' => author.id,
+    'first_name' => author.first_name,
+    'last_name' => author.last_name
+  }
+
+  @authors << author_input
+  File.write('./data/authors.json', JSON.pretty_generate(@authors))
+end
+
+def add_label
+  print 'Enter label name: '
+  label_name = gets.chomp
+
+  label_input = {
+    'id' => Random.rand(1..1000),
+    'name' => label_name
+  }
+
+  save_label(label_input)
+end
+
+def save_label(label_input)
+  @labels << label_input
+  File.write('./data/labels.json', JSON.pretty_generate(@labels))
+end
+
+def exit_app
+  puts 'Thanks for using the app'
+  exit
+end
+
+def create_game(options)
+  Game.new({
+             genre: options[:genre],
+             author: options[:author],
+             label: options[:label],
+             publish_date: options[:publish_date],
+             multiplayer: options[:multiplayer],
+             last_played_at: options[:last_played_at]
+           })
 end

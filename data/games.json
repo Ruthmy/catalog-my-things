@@ -1,0 +1,22 @@
+[
+  {
+    "id": 133,
+    "author": "a",
+    "genre": "a",
+    "label": "a",
+    "publish_date": "1",
+    "multiplayer": "yes",
+    "last_played_at": "2",
+    "archived": true
+  },
+  {
+    "id": 39,
+    "author": "a",
+    "genre": "a",
+    "label": "a",
+    "publish_date": "1",
+    "multiplayer": "yes",
+    "last_played_at": "2",
+    "archived": true
+  }
+]

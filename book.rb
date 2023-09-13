@@ -1,36 +1,24 @@
+# book.rb
+
 require_relative 'item'
 
 class Book < Item
-  attr_accessor :publisher, :cover_state
+  attr_accessor :genre, :author, :label, :publish_date, :cover_state, :publisher, :id, :archived
 
-  def initialize(publisher, cover_state, genre, author, source, label, publish_date, archived = false)
-    super(genre, author, source, label, publish_date, archived)
-    @publisher = publisher
-    @cover_state = cover_state
+  # rubocop:disable Lint/MissingSuper
+  def initialize(attributes)
+    @genre = attributes[:genre]
+    @author = attributes[:author]
+    @label = attributes[:label]
+    @publish_date = attributes[:publish_date]
+    @cover_state = attributes[:cover_state]
+    @publisher = attributes[:publisher]
+    @id = Random.rand(1..1000)
+    @archived = false
   end
+  # rubocop:enable Lint/MissingSuper
 
-  def to_json
-    {
-      'publisher' => @publisher,
-      'cover_state' => @cover_state,
-      'item_data' => super
-    }.to_json
-  end
-
-  def self.from_json(json)
-    data = JSON.parse(json)
-    item_data = data['item_data']
-    item = super(item_data.to_json)
-
-    new(
-      data['publisher'],
-      data['cover_state'],
-      item.genre,
-      item.author,
-      item.source,
-      item.label,
-      item.publish_date,
-      item.archived
-    )
+  def can_be_archived?
+    super || @cover_state == 'bad'
   end
 end
