@@ -68,8 +68,6 @@ class App
     genre = gets.chomp
     print 'Author: '
     author = gets.chomp
-    print 'Source: '
-    source = gets.chomp
     print 'Label: '
     label = gets.chomp
     print 'Publish date: '
@@ -78,7 +76,7 @@ class App
     multiplayer = gets.chomp
     print 'Last played at: '
     last_played_at = gets.chomp
-    add_game(genre, author, source, label, publish_date, multiplayer, last_played_at)
+    add_game(genre, author, label, publish_date, multiplayer, last_played_at)
   end
 
   private
@@ -130,20 +128,19 @@ class App
     puts 'this will add a music album'
   end
 
-  def add_game(genre, author, source, label, publish_date, multiplayer, last_played_at)
+  def add_game(genre, author, label, publish_date, multiplayer, last_played_at)
     names = author.split  # Split the name at the spaces.
     first_name = names[0]
     last_name = names[1] if names.length > 1
     author_obj = Author.new(first_name, last_name)
     add_author(author_obj)
 
-    game = Game.new(genre, author_obj, source, label, publish_date, multiplayer, last_played_at)
+    game = Game.new(genre, author_obj, label, publish_date, multiplayer, last_played_at)
 
     game_input = {
       'id' => game.id,
       'author' => author,
       'genre' => game.genre,
-      'source' => game.source,
       'label' => game.label,
       'publish_date' => game.publish_date,
       'multiplayer' => game.multiplayer,
