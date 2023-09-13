@@ -1,15 +1,12 @@
 class Item
-  attr_accessor :genre, :author, :source, :label, :publish_date
+  attr_accessor :genre, :author, :label, :publish_date
 
-  def initialize(genre, author, source, label, publish_date)
-    self.class.id_counter = (self.class.id_counter || 0) + 1
+  def initialize(genre, author, label, publish_date)
     @genre = genre
     @author = author
-    @source = source
     @label = label
     @publish_date = publish_date
-    private
-    @id = self.class.id_counter
+    @id = Random.rand(1..1000)
     @archived = false
   end
 
@@ -17,12 +14,12 @@ class Item
     @archived = true if can_be_archived?
   end
 
-  private
-
   attr_reader :id, :archived
 
+  private
+
   def can_be_archived?
-    return true if Time.now.year - @publish_date.year > 10
+    return true if Time.now.year - @publish_date.to_i > 10
 
     false
   end

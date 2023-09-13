@@ -6,10 +6,9 @@ class Author
   @items = []
 
   def initialize(first_name, last_name)
-    self.class.id_counter = (self.class.id_counter || 0) + 1
+    @id = Random.rand(1..1000)
     @first_name = first_name
     @last_name = last_name
-    @id = self.class.id_counter
   end
 
   attr_reader :id, :items
