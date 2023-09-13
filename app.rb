@@ -80,6 +80,7 @@ class App
   end
 
   private
+
   def respond_to_option(selected_opt, options)
     if options.key?(selected_opt)
       send(options[selected_opt])
@@ -129,7 +130,7 @@ class App
   end
 
   def add_game(genre, author, label, publish_date, multiplayer, last_played_at)
-    names = author.split  # Split the name at the spaces.
+    names = author.split # Split the name at the spaces.
     first_name = names[0]
     last_name = names[1] if names.length > 1
     author_obj = Author.new(first_name, last_name)

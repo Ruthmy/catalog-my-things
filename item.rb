@@ -15,7 +15,7 @@ class Item
   end
 
   attr_reader :id, :archived
-  
+
   private
 
   def can_be_archived?
