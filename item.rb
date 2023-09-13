@@ -1,5 +1,8 @@
+require_relative 'genre'
+
 class Item
   attr_accessor :id, :publish_date, :archived
+  attr_reader :genre, :author, :label
 
   def initialize(publish_date, id = nil)
     @id = id || Random.rand(1..10_000)
@@ -12,8 +15,8 @@ class Item
 
   # Setter methods for 1-to-many relationships
   def genre=(genre)
-    @genre = genre
-    genre.add_item(self) unless genre.items.include?(self)
+    @genre = genre.name
+    genre.items.push(self) unless genre.items.include?(self)
   end
 
   def author=(author)
