@@ -4,7 +4,6 @@ class Item
   def initialize(genre, author, label, publish_date)
     @genre = genre
     @author = author
-    @source = source
     @label = label
     @publish_date = publish_date
     @id = Random.rand(1..1000)
