@@ -3,7 +3,6 @@ require_relative 'item'
 class Author
   attr_accessor :first_name, :last_name
 
-  
   def initialize(first_name, last_name)
     @items = []
     @id = Random.rand(1..1000)
@@ -15,9 +14,9 @@ class Author
 
   # has-many relationship with Item
   def add_item(item)
-    if item.is_a?(Item)
-      @items << item
-      item.author = self
-    end
+    return unless item.is_a?(Item)
+
+    @items << item
+    item.author = self
   end
 end

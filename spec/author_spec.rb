@@ -4,7 +4,7 @@ require './label'
 require './genre'
 
 describe Author do
-  context "When testing the Author class" do
+  context 'When testing the Author class' do
     it "Don't add the item if it's not an instance" do
       author = Author.new('Juan', 'Gabriel')
       item = 'Hello World :D'
@@ -13,7 +13,7 @@ describe Author do
       expect(author.items.empty?).to be true
     end
 
-    it "Add 1 item" do
+    it 'Add 1 item' do
       author = Author.new('Stephen', 'King')
       genre = Genre.new('Horror')
       label = Label.new('It')
