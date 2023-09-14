@@ -1,3 +1,5 @@
+require 'date'
+
 class Item
   attr_accessor :genre, :author, :label, :publish_date
 
@@ -5,7 +7,7 @@ class Item
     @genre = genre
     @author = author
     @label = label
-    @publish_date = publish_date
+    @publish_date = Date.parse publish_date
     @id = Random.rand(1..1000)
     @archived = false
   end
@@ -19,7 +21,7 @@ class Item
   private
 
   def can_be_archived?
-    return true if Time.now.year - @publish_date.to_i > 10
+    return true if Time.now.year - @publish_date.year > 10
 
     false
   end
