@@ -3,7 +3,7 @@ require_relative 'file_manager'
 require_relative 'author'
 require_relative 'game'
 require_relative 'book'
-require_relative 'addgathersave'
+require_relative 'add_gather_save'
 
 class App
   include FileManager

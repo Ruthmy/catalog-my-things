@@ -13,7 +13,7 @@ module AddGather
     author = gets.chomp
     print 'Label: '
     label = gets.chomp
-    print 'Publish date (year): '
+    print 'Publish date (dd/mm/yyyy): '
     publish_date = gets.chomp
     puts 'Publisher:'
     publisher = gets.chomp
@@ -38,9 +38,9 @@ module AddGather
     add_author(author_obj) # Assuming you have similar logic for authors as with games.
     label_obj = Label.new(options[:label])
     add_label(label_obj)
-
+  
     book = create_book(options)
-
+  
     book_input = {
       'id' => book.id, # This assumes you have a similar id logic for books as with games.
       'author' => options[:author],
@@ -49,9 +49,9 @@ module AddGather
       'publish_date' => book.publish_date,
       'cover_state' => book.cover_state,
       'publisher' => book.publisher,
-      'archived' => book.can_be_archived?
+      'archived' => book.can_be_archived? # Use the updated can_be_archived? method
     }
-
+  
     json_book(book_input)
     add_label_if_not_exists(options[:label])
   end
