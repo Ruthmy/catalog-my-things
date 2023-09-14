@@ -151,18 +151,14 @@ class App
     add_label(label_obj)
 
     game = create_game(options)
-
     game_input = {
       'id' => game.id,
       'author' => options[:author],
       'genre' => game.genre,
       'label' => game.label,
-      'publish_date' => game.publish_date,
       'multiplayer' => game.multiplayer,
-      'last_played_at' => game.last_played_at,
       'archived' => game.can_be_archived?
     }
-
     @games << game_input
     File.write('./data/games.json', JSON.pretty_generate(@games))
   end
