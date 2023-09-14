@@ -10,6 +10,9 @@ CREATE TABLE games(
   archived  bool,
   multiplayer bool,
   last_played_at  date,
+  author_id   INT REFERENCES authors(id),
+  genre_id INT REFERENCES genres(id),
+  label_id INT REFERENCES labels(id),
   PRIMARY KEY(id)
 );
 
