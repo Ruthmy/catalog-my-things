@@ -60,11 +60,11 @@ class App
     author = gets.chomp
     print 'Label: '
     label = gets.chomp
-    print 'Publish date (year): '
+    print 'Publish date [Day/Month/Year]: '
     publish_date = gets.chomp
     print 'Multiplayer: '
     multiplayer = gets.chomp
-    print 'Last played at (year): '
+    print 'Last played at [Day/Month/Year]: '
     last_played_at = gets.chomp
     add_game({
                genre: genre,
