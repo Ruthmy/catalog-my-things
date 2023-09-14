@@ -38,9 +38,9 @@ module AddGather
     add_author(author_obj) # Assuming you have similar logic for authors as with games.
     label_obj = Label.new(options[:label])
     add_label(label_obj)
-  
+
     book = create_book(options)
-  
+
     book_input = {
       'id' => book.id, # This assumes you have a similar id logic for books as with games.
       'author' => options[:author],
@@ -51,7 +51,7 @@ module AddGather
       'publisher' => book.publisher,
       'archived' => book.can_be_archived? # Use the updated can_be_archived? method
     }
-  
+
     json_book(book_input)
     add_label_if_not_exists(options[:label])
   end
