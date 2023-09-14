@@ -1,3 +1,5 @@
+require_relative 'label'
+
 module AddGather
   def add_book
     book_details = gather_book_details
@@ -34,6 +36,8 @@ module AddGather
     last_name = names[1] if names.length > 1
     author_obj = Author.new(first_name, last_name)
     add_author(author_obj) # Assuming you have similar logic for authors as with games.
+    label_obj = Label.new(options[:label])
+    add_label(label_obj)
 
     book = create_book(options)
 
