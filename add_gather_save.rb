@@ -13,7 +13,7 @@ module AddGather
     author = gets.chomp
     print 'Label: '
     label = gets.chomp
-    print 'Publish date (year): '
+    print 'Publish date (dd/mm/yyyy): '
     publish_date = gets.chomp
     puts 'Publisher:'
     publisher = gets.chomp
@@ -49,7 +49,7 @@ module AddGather
       'publish_date' => book.publish_date,
       'cover_state' => book.cover_state,
       'publisher' => book.publisher,
-      'archived' => book.can_be_archived?
+      'archived' => book.can_be_archived? # Use the updated can_be_archived? method
     }
 
     json_book(book_input)
