@@ -2,7 +2,10 @@ require_relative '../book'
 
 describe Book do
   describe '#initialize' do
-    let(:book) { Book.new({ genre: 'Fiction', author: 'John Doe', label: 'TestLabel', publish_date: '2023', cover_state: 'good', publisher: 'TestPub' }) }
+    let(:book) do
+      Book.new({ genre: 'Fiction', author: 'John Doe', label: 'TestLabel', publish_date: '2023', cover_state: 'good',
+                 publisher: 'TestPub' })
+    end
 
     it 'should correctly initialize a book' do
       expect(book.genre).to eq('Fiction')
@@ -24,7 +27,10 @@ describe Book do
     end
 
     context 'when cover_state is bad' do
-      let(:book) { Book.new({ genre: 'Fiction', author: 'John Doe', label: 'TestLabel', publish_date: '2023', cover_state: 'bad', publisher: 'TestPub' }) }
+      let(:book) do
+        Book.new({ genre: 'Fiction', author: 'John Doe', label: 'TestLabel', publish_date: '2023', cover_state: 'bad',
+                   publisher: 'TestPub' })
+      end
 
       it 'returns true' do
         expect(book.can_be_archived?).to eq(true)
@@ -32,8 +38,11 @@ describe Book do
     end
 
     context 'when cover_state is not bad and super returns false' do
-      let(:book) { Book.new({ genre: 'Fiction', author: 'John Doe', label: 'TestLabel', publish_date: '2023', cover_state: 'good', publisher: 'TestPub' }) }
-      
+      let(:book) do
+        Book.new({ genre: 'Fiction', author: 'John Doe', label: 'TestLabel', publish_date: '2023', cover_state: 'good',
+                   publisher: 'TestPub' })
+      end
+
       it 'returns false' do
         expect(book.can_be_archived?).to eq(false)
       end

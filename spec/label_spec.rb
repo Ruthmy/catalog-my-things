@@ -12,16 +12,16 @@ RSpec.describe Label do
 
   describe '#initialize' do
     it 'initializes with a title and a random id' do
-      label = Label.new("Test")
+      label = Label.new('Test')
 
-      expect(label.title).to eq("Test")
+      expect(label.title).to eq('Test')
       expect(label.id).to be_between(1, 1000)
     end
   end
 
   describe '#add_item' do
     it 'adds an item to the items list and sets the label of the item' do
-      label = Label.new("Test")
+      label = Label.new('Test')
       item = double('Item')
 
       label.add_item(item)
@@ -32,7 +32,7 @@ RSpec.describe Label do
 
   describe '#items' do
     it 'returns a list of items' do
-      label = Label.new("Test")
+      label = Label.new('Test')
       item1 = double('Item1')
       item2 = double('Item2')
 
