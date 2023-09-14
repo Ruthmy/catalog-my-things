@@ -52,8 +52,12 @@ module AddGather
       'archived' => book.can_be_archived?
     }
 
+    json_book(book_input)
+    add_label_if_not_exists(options[:label])
+  end
+
+  def json_book(book_input)
     @books << book_input
     File.write('./data/books.json', JSON.pretty_generate(@books))
-    add_label_if_not_exists(options[:label])
   end
 end
