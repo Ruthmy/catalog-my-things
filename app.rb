@@ -7,11 +7,13 @@ require_relative 'genre'
 require_relative 'list_functions'
 require_relative 'file_manager'
 require_relative 'add_gather_save'
+require_relative 'add_music_album_methods'
 
 class App
   include FileManager
   include AddGather
   include ListFunctions
+  include AddMusicAlbumMethods
   def initialize
     create_data
     load_data_from_files
@@ -131,10 +133,6 @@ class App
     File.write('./data/authors.json', JSON.pretty_generate(@authors))
   end
 
-  def create_book(options)
-    Book.new(options)
-  end
-
   def add_music_album
     print 'Genre: '
     genre = gets.chomp
@@ -155,37 +153,6 @@ class App
                        })
   end
 
-  def create_music_album(options)
-    names = options[:author].split # Split the name at the spaces.
-    first_name = names[0]
-    last_name = names[1] if names.length > 1
-    add_author_if_doesnt_exist(first_name, last_name)
-    add_label(options[:label])
-    add_genre_if_doesnt_exist(options[:genre])
-
-    music_album = create_object_music_album(options)
-    music_album_input = {
-      'id' => music_album.id,
-      'author' => options[:author],
-      'genre' => music_album.genre,
-      'label' => music_album.label,
-      'on_spotify' => music_album.on_spotify,
-      'archived' => music_album.can_be_archived?
-    }
-    @music_albums << music_album_input
-    File.write('./data/music_albums.json', JSON.pretty_generate(@music_albums))
-  end
-
-  def create_object_music_album(options)
-    MusicAlbum.new(
-      options[:genre],
-      options[:author],
-      options[:label],
-      options[:publish_date],
-      on_spotify: options[:on_spotify]
-    )
-  end
-
   def add_label(label_name)
     return if @labels.any? { |label| label['name'] == label_name }
 
@@ -197,18 +164,6 @@ class App
 
     @labels << label_input
     File.write('./data/labels.json', JSON.pretty_generate(@labels))
-  end
-
-  def add_genre_if_doesnt_exist(genre_name)
-    return if @genres.any? { |genre| genre['name'] == genre_name }
-
-    genre = Genre.new(genre_name)
-    genre_input = {
-      'id' => genre.id,
-      'name' => genre.name
-    }
-    @genres << genre_input
-    File.write('./data/genres.json', JSON.pretty_generate(@genres))
   end
 
   def exit_app
