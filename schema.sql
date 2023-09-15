@@ -53,6 +53,9 @@ CREATE TABLE MusicAlbum(
   id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   item_id INT REFERENCES Item(id),
   on_spotify BOOLEAN
+  author_id INT REFERENCES Author(id), 
+  label_id INT REFERENCES Label(id), 
+  genre_id INT REFERENCES Genre(id), 
 );
 
 -- Create labels table
@@ -65,7 +68,7 @@ CREATE TABLE Label(
 );
 -- Create books table
 
-CREATE TABLE Books(
+CREATE TABLE Book(
     id INT, 
     name VARCHAR(255), 
     published_date DATE, 
