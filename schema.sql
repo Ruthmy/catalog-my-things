@@ -1,7 +1,39 @@
 /* CREATE DATABASE */
 
-/* Create Games table */
-CREATE TABLE games(
+CREATE DATABASE catalog_app;
+
+-- Enter into the database
+\c catalog_app;
+
+-- Create the tables --
+
+-- Create genre table
+CREATE TABLE Genre(
+  id      INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name    varchar(50),
+);
+
+/* Create Authors table */
+CREATE TABLE Author(
+  id      INT GENERATED ALWAYS AS IDENTITY,
+  first_name    varchar(50),
+  last_name     varchar(50),
+  items         varchar(50)[],
+  PRIMARY KEY(id)
+);
+
+-- Create items table (parent table)
+CREATE TABLE Item(
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  genre_id INT REFERENCES Genre(id),
+  author_id INT REFERENCES Author(id),
+  label_id INT REFERENCES Label(id),
+  publish_date  DATE,
+  archived BOOLEAN,
+);
+
+/* Create Games table (child table of item) */
+CREATE TABLE Games(
   id      INT GENERATED ALWAYS AS IDENTITY,
   genre   varchar(50),
   author  varchar(50),
@@ -10,17 +42,38 @@ CREATE TABLE games(
   archived  bool,
   multiplayer bool,
   last_played_at  date,
-  author_id   INT REFERENCES authors(id),
-  genre_id INT REFERENCES genres(id),
-  label_id INT REFERENCES labels(id),
+  author_id   INT REFERENCES Author(id),
+  genre_id INT REFERENCES Genre(id),
+  label_id INT REFERENCES Label(id),
   PRIMARY KEY(id)
 );
 
-/* Create Authors table */
-CREATE TABLE authors(
-  id      INT GENERATED ALWAYS AS IDENTITY,
-  first_name    varchar(50),
-  last_name     varchar(50),
-  items         varchar(50)[],
+-- Create music album table (child table of item)
+CREATE TABLE MusicAlbum(
+  id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  item_id INT REFERENCES Item(id),
+  on_spotify BOOLEAN
+);
+
+-- Create labels table
+
+CREATE TABLE Label(
+  id INT, 
+  title VARCHAR(255), 
+  color VARCHAR(255), 
   PRIMARY KEY(id)
+);
+-- Create books table
+
+CREATE TABLE Books(
+    id INT, 
+    name VARCHAR(255), 
+    published_date DATE, 
+    publisher VARCHAR(255), 
+    cover_state VARCHAR(255), 
+    archived BOOLEAN, 
+    author_id INT REFERENCES Author(id), 
+    label_id INT REFERENCES Label(id), 
+    genre_id INT REFERENCES Genre(id), 
+    PRIMARY KEY(id)
 );
