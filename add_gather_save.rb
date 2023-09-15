@@ -12,7 +12,10 @@ module AddGather
     print 'Author: '
     author = gets.chomp
     print 'Label: '
-    label = gets.chomp
+    label_name = gets.chomp
+    print 'Label Color: '
+    label_color = gets.chomp.strip
+    label_color = nil if label_color.empty?
     print 'Publish date (dd/mm/yyyy): '
     publish_date = gets.chomp
     puts 'Publisher:'
@@ -21,12 +24,9 @@ module AddGather
     cover_state = gets.chomp
 
     {
-      genre: genre,
-      author: author,
-      label: label,
-      publish_date: publish_date,
-      cover_state: cover_state,
-      publisher: publisher
+      genre: genre, author: author,
+      label: label_name, label_color: label_color,
+      publish_date: publish_date, cover_state: cover_state, publisher: publisher
     }
   end
 
@@ -39,7 +39,8 @@ module AddGather
     first_name = names[0]
     last_name = names[1] if names.length > 1
     add_author_if_doesnt_exist(first_name, last_name)
-    add_label(options[:label])
+    label_obj = Label.new(options[:label], options[:label_color])
+    add_label(label_obj)
     add_genre_if_doesnt_exist(options[:genre])
 
     book = create_book(options)
@@ -63,4 +64,17 @@ module AddGather
     @books << book_input
     File.write('./data/books.json', JSON.pretty_generate(@books))
   end
+end
+
+def add_label(label_obj)
+  return if @labels.any? { |label| label['name'] == label_obj.title }
+
+  label_input = {
+    'id' => label_obj.id,
+    'name' => label_obj.title,
+    'color' => label_obj.color
+  }
+
+  @labels << label_input
+  File.write('./data/labels.json', JSON.pretty_generate(@labels))
 end

@@ -62,21 +62,20 @@ class App
     print 'Author: '
     author = gets.chomp
     print 'Label: '
-    label = gets.chomp
+    label_name = gets.chomp
+    print 'Label Color: '
+    label_color = gets.chomp.strip
+    label_color = nil if label_color.empty?
     print 'Publish date [Day/Month/Year]: '
     publish_date = gets.chomp
     print 'Multiplayer: '
     multiplayer = gets.chomp
     print 'Last played at [Day/Month/Year]: '
     last_played_at = gets.chomp
-    add_game({
-               genre: genre,
-               author: author,
-               label: label,
-               publish_date: publish_date,
-               multiplayer: multiplayer,
-               last_played_at: last_played_at
-             })
+    add_game({ genre: genre, author: author,
+               label: label_name, label_color: label_color,
+               publish_date: publish_date, multiplayer: multiplayer,
+               last_played_at: last_played_at })
   end
 
   private
@@ -103,7 +102,8 @@ class App
     first_name = names[0]
     last_name = names[1] if names.length > 1
     add_author_if_doesnt_exist(first_name, last_name)
-    add_label(options[:label])
+    label_obj = Label.new(options[:label], options[:label_color])
+    add_label(label_obj)
     add_genre_if_doesnt_exist(options[:genre])
 
     game = create_game(options)
@@ -139,31 +139,19 @@ class App
     print 'Author: '
     author = gets.chomp
     print 'Label: '
-    label = gets.chomp
+    label_name = gets.chomp
+    print 'Label Color: '
+    label_color = gets.chomp.strip
+    label_color = nil if label_color.empty?
     print 'Publish date [Day/Month/Year]: '
     publish_date = gets.chomp
     print 'Is it on spotify? (y/n)'
     on_spotify = gets.chomp.upcase == 'Y'
     create_music_album({
-                         genre: genre,
-                         author: author,
-                         label: label,
-                         publish_date: publish_date,
-                         on_spotify: on_spotify
+                         genre: genre, author: author,
+                         label: label_name, label_color: label_color,
+                         publish_date: publish_date, on_spotify: on_spotify
                        })
-  end
-
-  def add_label(label_name)
-    return if @labels.any? { |label| label['name'] == label_name }
-
-    label = Label.new(label_name)
-    label_input = {
-      'id' => Random.rand(1..1000),
-      'name' => label.title
-    }
-
-    @labels << label_input
-    File.write('./data/labels.json', JSON.pretty_generate(@labels))
   end
 
   def exit_app
