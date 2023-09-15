@@ -1,11 +1,11 @@
 module ListFunctions
   def list_books
     if @books.empty?
-      puts 'No books found.'
+      puts "\nNo books found. \n\n"
       return
     end
 
-    puts 'Listing all books:'
+    puts "\nListing all books:\n\n"
     @books.each_with_index do |book, index|
       puts "#{index + 1}. Title: #{book['label']}, Author: #{book['author']},
         Genre: #{book['genre']},
@@ -16,21 +16,27 @@ module ListFunctions
 
   def list_music_albums
     if @music_albums.empty?
-      puts 'No music albums found.'
+      puts "\nNo music albums found. \n\n"
       return
     end
 
-    puts 'Listing all music albums:'
+    puts "\nListing all music albums:\n\n"
     @music_albums.each_with_index do |music_album, index|
       puts "#{index + 1}. Title: #{music_album['label']}, Author: #{music_album['author']},
         Genre: #{music_album['genre']},
         Publish Date: #{music_album['publish_date']},
-        On Spotify: #{music_album['on_spotify']}"
+        #{music_album['on_spotify'] ? 'On Spotify' : 'Not on Spotify'},
+        #{music_album['archived'] ? 'Archived' : 'Not archived'}"
     end
   end
 
   def list_games
-    puts 'Games: '
+    if @games.empty?
+      puts "\nNo games found. \n\n"
+      return
+    end
+
+    puts "\nGames: \n\n"
     @games.each do |game|
       puts "Title: #{game['label']}, Author: #{game['author']}, Genre: #{game['genre']}, "
       print "Archived: #{game['archived']}"
@@ -40,25 +46,35 @@ module ListFunctions
 
   def list_genres
     if @genres.empty?
-      puts 'No genres found.'
+      puts "\nNo genres found. \n\n"
       return
     end
 
-    puts 'Genres: '
+    puts "\nListing all Genres: \n\n"
     @genres.each do |genre|
       puts "ID: #{genre['id']}, Name: #{genre['name']}"
     end
   end
 
   def list_labels
-    puts 'Labels: '
+    if @labels.empty?
+      puts "\nNo labels found. \n\n"
+      return
+    end
+
+    puts "\nListing all Labels: \n\n"
     @labels.each do |label|
-      puts "ID: #{label['id']}, Name: #{label['name']}"
+      puts "ID: #{label['id']}, Name: #{label['name']}, Color: #{label['color']}"
     end
   end
 
   def list_authors
-    puts 'Authors: '
+    if @authors.empty?
+      puts "\nNo authors found. \n\n"
+      return
+    end
+
+    puts "\nAuthors: \n\n"
     @authors.each do |author|
       puts "Name: #{author['first_name']} #{author['last_name']}, ID: #{author['id']}"
     end
