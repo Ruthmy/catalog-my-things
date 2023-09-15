@@ -100,10 +100,8 @@ class App
     names = options[:author].split # Split the name at the spaces.
     first_name = names[0]
     last_name = names[1] if names.length > 1
-    author_obj = Author.new(first_name, last_name)
-    add_author(author_obj)
-    label_obj = Label.new(options[:label])
-    add_label(label_obj)
+    add_author_if_doesnt_exist(first_name, last_name)
+    add_label(options[:label])
     add_genre_if_doesnt_exist(options[:genre])
 
     game = create_game(options)
@@ -119,7 +117,10 @@ class App
     File.write('./data/games.json', JSON.pretty_generate(@games))
   end
 
-  def add_author(author)
+  def add_author_if_doesnt_exist(first_name, last_name)
+    return if @authors.any? { |author| author['first_name'] == first_name && author['last_name'] == last_name }
+
+    author = Author.new(first_name, last_name)
     author_input = {
       'id' => author.id,
       'first_name' => author.first_name,
@@ -138,13 +139,17 @@ class App
     puts 'this will add a music album'
   end
 
-  def add_label(label)
+  def add_label(label_name)
+    return if @labels.any? { |label| label['name'] == label_name }
+
+    label = Label.new(label_name)
     label_input = {
       'id' => Random.rand(1..1000),
       'name' => label.title
     }
 
-    save_label(label_input)
+    @labels << label_input
+    File.write('./data/labels.json', JSON.pretty_generate(@labels))
   end
 
   def add_genre_if_doesnt_exist(genre_name)
@@ -157,11 +162,6 @@ class App
     }
     @genres << genre_input
     File.write('./data/genres.json', JSON.pretty_generate(@genres))
-  end
-
-  def save_label(label_input)
-    @labels << label_input
-    File.write('./data/labels.json', JSON.pretty_generate(@labels))
   end
 
   def exit_app
