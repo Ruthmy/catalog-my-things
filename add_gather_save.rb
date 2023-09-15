@@ -30,6 +30,10 @@ module AddGather
     }
   end
 
+  def create_book(options)
+    Book.new(options)
+  end
+
   def save_book(options)
     names = options[:author].split # Split the name at the spaces.
     first_name = names[0]
