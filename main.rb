@@ -18,10 +18,10 @@ class Main
       'Add a game',
       'Exit'
     ]
-    puts 'Welcome, please select an option by entering the corresponding number: '
+    puts "Welcome, please select an option by entering the corresponding number: \n\n"
     options.each_with_index { |option, index| puts "#{index + 1} - #{option}" }
     @app.option_select
-    puts 'Press Enter key to continue...'
+    puts "\nPress Enter key to continue..."
     gets
     run
   end

@@ -4,7 +4,8 @@ module AddMusicAlbumMethods
     first_name = names[0]
     last_name = names[1] if names.length > 1
     add_author_if_doesnt_exist(first_name, last_name)
-    add_label(options[:label])
+    label_obj = Label.new(options[:label], options[:label_color])
+    add_label(label_obj)
     add_genre_if_doesnt_exist(options[:genre])
 
     music_album = create_object_music_album(options)
@@ -13,6 +14,7 @@ module AddMusicAlbumMethods
       'author' => options[:author],
       'genre' => music_album.genre,
       'label' => music_album.label,
+      'publish_date' => music_album.publish_date,
       'on_spotify' => music_album.on_spotify,
       'archived' => music_album.can_be_archived?
     }
