@@ -14,6 +14,7 @@ module AddMusicAlbumMethods
       'author' => options[:author],
       'genre' => music_album.genre,
       'label' => music_album.label,
+      'publish_date' => music_album.publish_date,
       'on_spotify' => music_album.on_spotify,
       'archived' => music_album.can_be_archived?
     }
