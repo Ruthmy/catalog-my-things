@@ -1,13 +1,15 @@
 require 'json'
+require_relative 'list_functions'
 require_relative 'file_manager'
 require_relative 'author'
 require_relative 'game'
 require_relative 'book'
-require_relative 'add_gather_save'
+require_relative 'addgathersave'
 
 class App
   include FileManager
   include AddGather
+  include ListFunctions
   def initialize
     create_data
     initialize_collections
@@ -67,12 +69,12 @@ class App
     print 'Last played at [Day/Month/Year]: '
     last_played_at = gets.chomp
     add_game({
-               genre: genre,
-               author: author,
-               label: label,
-               publish_date: publish_date,
-               multiplayer: multiplayer,
-               last_played_at: last_played_at
+               genre:,
+               author:,
+               label:,
+               publish_date:,
+               multiplayer:,
+               last_played_at:
              })
   end
 
@@ -83,52 +85,6 @@ class App
       send(options[selected_opt])
     else
       exit_app
-    end
-  end
-
-  def list_books
-    if @books.empty?
-      puts 'No books found.'
-      return
-    end
-
-    puts 'Listing all books:'
-    @books.each_with_index do |book, index|
-      puts "#{index + 1}. Title: #{book['label']}, Author: #{book['author']},
-        Genre: #{book['genre']},
-        Publish Date: #{book['publish_date']},
-        Cover State: #{book['cover_state']}, Publisher: #{book['publisher']}"
-    end
-  end
-
-  def list_music_albums
-    puts 'this will list the music albums'
-  end
-
-  def list_games
-    puts 'Games: '
-    @games.each do |game|
-      puts "Title: #{game['label']}, Author: #{game['author']}, Genre: #{game['genre']}, "
-      print "Archived: #{game['archived']}"
-      puts "\n"
-    end
-  end
-
-  def list_genres
-    puts 'this will list the genres'
-  end
-
-  def list_labels
-    puts 'Labels: '
-    @labels.each do |label|
-      puts "ID: #{label['id']}, Name: #{label['name']}"
-    end
-  end
-
-  def list_authors
-    puts 'Authors: '
-    @authors.each do |author|
-      puts "Name: #{author['first_name']} #{author['last_name']}, ID: #{author['id']}"
     end
   end
 
@@ -173,42 +129,42 @@ class App
     @authors << author_input
     File.write('./data/authors.json', JSON.pretty_generate(@authors))
   end
-end
 
-def create_book(options)
-  Book.new(options)
-end
+  def create_book(options)
+    Book.new(options)
+  end
 
-def add_music_album
-  puts 'this will add a music album'
-end
+  def add_music_album
+    puts 'this will add a music album'
+  end
 
-def add_label(label)
-  label_input = {
-    'id' => Random.rand(1..1000),
-    'name' => label.title
-  }
+  def add_label(label)
+    label_input = {
+      'id' => Random.rand(1..1000),
+      'name' => label.title
+    }
 
-  save_label(label_input)
-end
+    save_label(label_input)
+  end
 
-def save_label(label_input)
-  @labels << label_input
-  File.write('./data/labels.json', JSON.pretty_generate(@labels))
-end
+  def save_label(label_input)
+    @labels << label_input
+    File.write('./data/labels.json', JSON.pretty_generate(@labels))
+  end
 
-def exit_app
-  puts 'Thanks for using the app'
-  exit
-end
+  def exit_app
+    puts 'Thanks for using the app'
+    exit
+  end
 
-def create_game(options)
-  Game.new({
-             genre: options[:genre],
-             author: options[:author],
-             label: options[:label],
-             publish_date: options[:publish_date],
-             multiplayer: options[:multiplayer],
-             last_played_at: options[:last_played_at]
-           })
+  def create_game(options)
+    Game.new({
+               genre: options[:genre],
+               author: options[:author],
+               label: options[:label],
+               publish_date: options[:publish_date],
+               multiplayer: options[:multiplayer],
+               last_played_at: options[:last_played_at]
+             })
+  end
 end
