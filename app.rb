@@ -1,10 +1,12 @@
 require 'json'
-require_relative 'list_functions'
-require_relative 'file_manager'
 require_relative 'author'
 require_relative 'game'
 require_relative 'book'
-require_relative 'addgathersave'
+require_relative 'music_album'
+require_relative 'genre'
+require_relative 'list_functions'
+require_relative 'file_manager'
+require_relative 'add_gather_save'
 
 class App
   include FileManager
@@ -12,22 +14,8 @@ class App
   include ListFunctions
   def initialize
     create_data
-    initialize_collections
+    load_data_from_files
     ensure_files_exist
-    load_data_from_files
-  end
-
-  def initialize_collections
-    @albums = []
-    @genres = []
-    load_data_from_files
-  end
-
-  def ensure_files_exist
-    create_file_if_not_exists('./data/games.json')
-    create_file_if_not_exists('./data/authors.json')
-    create_file_if_not_exists('./data/books.json')
-    create_file_if_not_exists('./data/labels.json')
   end
 
   # Sets the arrays to be empty or to be the parsed info from the files
@@ -36,6 +24,17 @@ class App
     @authors = load_json_file('./data/authors.json', [])
     @books = load_json_file('./data/books.json', [])
     @labels = load_json_file('./data/labels.json', [])
+    @genres = load_json_file('./data/genres.json', [])
+    @music_albums = load_json_file('./data/music_albums.json', [])
+  end
+
+  def ensure_files_exist
+    create_file_if_not_exists('./data/games.json')
+    create_file_if_not_exists('./data/authors.json')
+    create_file_if_not_exists('./data/books.json')
+    create_file_if_not_exists('./data/labels.json')
+    create_file_if_not_exists('./data/genres.json')
+    create_file_if_not_exists('./data/music_albums.json')
   end
 
   def option_select
@@ -105,6 +104,7 @@ class App
     add_author(author_obj)
     label_obj = Label.new(options[:label])
     add_label(label_obj)
+    add_genre_if_doesnt_exist(options[:genre])
 
     game = create_game(options)
     game_input = {
@@ -145,6 +145,18 @@ class App
     }
 
     save_label(label_input)
+  end
+
+  def add_genre_if_doesnt_exist(genre_name)
+    return if @genres.any? { |genre| genre['name'] == genre_name }
+
+    genre = Genre.new(genre_name)
+    genre_input = {
+      'id' => genre.id,
+      'name' => genre.name
+    }
+    @genres << genre_input
+    File.write('./data/genres.json', JSON.pretty_generate(@genres))
   end
 
   def save_label(label_input)
