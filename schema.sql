@@ -57,7 +57,7 @@ CREATE TABLE MusicAlbum(
 
 -- Create labels table
 
-CREATE TABLE labels(
+CREATE TABLE Label(
   id INT, 
   title VARCHAR(255), 
   color VARCHAR(255), 
@@ -65,15 +65,15 @@ CREATE TABLE labels(
 );
 -- Create books table
 
-CREATE TABLE books(
+CREATE TABLE Books(
     id INT, 
     name VARCHAR(255), 
     published_date DATE, 
     publisher VARCHAR(255), 
     cover_state VARCHAR(255), 
     archived BOOLEAN, 
-    author_id INT REFERENCES authors(id), 
-    label_id INT REFERENCES labels(id), 
-    genre_id INT REFERENCES genres(id), 
+    author_id INT REFERENCES Author(id), 
+    label_id INT REFERENCES Label(id), 
+    genre_id INT REFERENCES Genre(id), 
     PRIMARY KEY(id)
 );
