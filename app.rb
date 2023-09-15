@@ -145,7 +145,7 @@ class App
     label_color = nil if label_color.empty?
     print 'Publish date [Day/Month/Year]: '
     publish_date = gets.chomp
-    print 'Is it on spotify? (y/n)'
+    print 'Is it on spotify? (y/n) '
     on_spotify = gets.chomp.upcase == 'Y'
     create_music_album({
                          genre: genre, author: author,
