@@ -70,12 +70,12 @@ class App
     print 'Last played at [Day/Month/Year]: '
     last_played_at = gets.chomp
     add_game({
-               genre:,
-               author:,
-               label:,
-               publish_date:,
-               multiplayer:,
-               last_played_at:
+               genre: genre,
+               author: author,
+               label: label,
+               publish_date: publish_date,
+               multiplayer: multiplayer,
+               last_played_at: last_played_at
              })
   end
 
@@ -145,11 +145,11 @@ class App
     print 'Is it on spotify? (y/n)'
     on_spotify = gets.chomp.upcase == 'Y'
     create_music_album({
-                         genre:,
-                         author:,
-                         label:,
-                         publish_date:,
-                         on_spotify:
+                         genre: genre,
+                         author: author,
+                         label: label,
+                         publish_date: publish_date,
+                         on_spotify: on_spotify
                        })
   end
 
