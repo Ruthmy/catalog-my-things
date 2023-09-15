@@ -30,14 +30,17 @@ module AddGather
     }
   end
 
+  def create_book(options)
+    Book.new(options)
+  end
+
   def save_book(options)
     names = options[:author].split # Split the name at the spaces.
     first_name = names[0]
     last_name = names[1] if names.length > 1
-    author_obj = Author.new(first_name, last_name)
-    add_author(author_obj) # Assuming you have similar logic for authors as with games.
-    label_obj = Label.new(options[:label])
-    add_label(label_obj)
+    add_author_if_doesnt_exist(first_name, last_name)
+    add_label(options[:label])
+    add_genre_if_doesnt_exist(options[:genre])
 
     book = create_book(options)
 
